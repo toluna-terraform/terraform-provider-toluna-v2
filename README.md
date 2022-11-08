@@ -10,23 +10,25 @@ the arguments should include the -a|--action flag which calls the function (acti
 
 ```hcl
 #The following example validates there are no duplicate environments under two different data layers:
-module "validate" {
-  source                = "toluna-terraform/validations/custom"
-  version               = "~>0.0.1" // Change to the required version.
-  arguments = "-a validate_duplicate_env -f ${path.module}/some_json_file.json"
+  required_providers {
+    toluna = {
+      source = "toluna-terraform/toluna"
+    } 
+  }
 }
-#The following example validates you cannot enter a negative value as an index number or an index higher then maximum possible ciders in a json file:
-module "validate" {
-  source                = "toluna-terraform/validations/custom"
-  version               = "~>0.0.1" // Change to the required version.
-  arguments = "-a validate_min_max_env -f ${path.module}/some_json_file.json -m 15"
-}
-#The following example validates you cannot enter a duplicate index number in a json file:
-module "validate" {
-  source                = "toluna-terraform/validations/custom"
-  version               = "~>0.0.1" // Change to the required version.
-  arguments = "-a validate_duplicate_index -f ${path.module}/some_json_file.json"
-}
+
+data "toluna_validate_configuration" "app_json" {
+  dynamic "rule_set" {
+    for_each = local.app_config
+    content {
+      key_name = rule_set.value["key_name"]
+      rule     = rule_set.value["rule"]
+      value    = rule_set.value["value"]
+    }
+  }
+  json_config = data.consul_keys.appjson.var
+} 
+
 ```
 
 ## Toggles

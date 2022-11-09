@@ -36,19 +36,19 @@ func dataSourceValidateConfiguration() *schema.Resource {
 							ValidateFunc: func(val any, key string) (warns []string, errs []error) {
 								v := val.(string)
 								rules := map[string]bool{
-									"==":       true,
-									"!=":       true,
-									">":        true,
-									"<":        true,
-									"<=":       true,
-									">=":       true,
-									"contains": true,
-									"odd":      true,
-									"even":     true,
-									"unique":   true,
+									"==":           true,
+									"!=":           true,
+									">":            true,
+									"<":            true,
+									"<=":           true,
+									">=":           true,
+									"not_contains": true,
+									"odd":          true,
+									"even":         true,
+									"unique":       true,
 								}
 								if !rules[v] {
-									errs = append(errs, fmt.Errorf("%q must be one of the following rules [== | != | > | < | => | <= | contains | odd | even | unique] got: %d", key, v))
+									errs = append(errs, fmt.Errorf("%q must be one of the following rules [== | != | > | < | => | <= | not_contains | odd | even | unique] got: %d", key, v))
 								}
 								return
 							},
@@ -166,7 +166,7 @@ func dataSourceValidateConfigurationRead(ctx context.Context, d *schema.Resource
 					if intVar > intValue {
 						return diag.Errorf("Key %s in %s should be lower then or equal to: %s", key_name, value_arr, value)
 					}
-				case rule == "contains":
+				case rule == "not_contains":
 					for _, s := range value_arr {
 						if strings.Contains(s, value) {
 							return diag.Errorf("Key %s in %s should not contain:  %s", key_name, value_arr, value)

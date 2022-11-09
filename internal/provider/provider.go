@@ -43,6 +43,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"toluna_validate_configuration": dataSourceValidateConfiguration(),
+			"toluna_validate_modules":       dataSourceValidateModules(),
 		},
 	}
 }

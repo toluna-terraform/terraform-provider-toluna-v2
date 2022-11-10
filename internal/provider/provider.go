@@ -1,6 +1,9 @@
 package toluna
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -34,8 +37,21 @@ type getItemsResponse struct {
 	Body       getItemsResponseBody    `json:"body"`
 }
 
-func Provider() *schema.Provider {
-	return &schema.Provider{
+func init() {
+	schema.DescriptionKind = schema.StringMarkdown
+
+	schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
+		descriptionWithDefault := s.Description
+		if s.Default != nil {
+			descriptionWithDefault += fmt.Sprintf(" Defaults to `%v`.", s.Default)
+		}
+		return strings.TrimSpace(descriptionWithDefault)
+	}
+}
+
+func New() *schema.Provider {
+
+	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{},
 		ResourcesMap: map[string]*schema.Resource{
 			"toluna_invoke_lambda":   resourceInvokeLambda(),
@@ -46,4 +62,5 @@ func Provider() *schema.Provider {
 			"toluna_validate_modules":       dataSourceValidateModules(),
 		},
 	}
+	return provider
 }

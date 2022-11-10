@@ -10,16 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
-type Modules struct {
-	Modules []Module `json:"Modules"`
-}
-
-type Module struct {
-	Key     string `json:"Key"`
-	Version string `json:"Version"`
-	Source  string `json:"Source"`
-}
-
 func main() {
 
 	var debugMode bool

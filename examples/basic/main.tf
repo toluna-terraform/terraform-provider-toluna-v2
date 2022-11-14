@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 provider "toluna" {
-  
+  strict_module_validation = true
 }
 
 

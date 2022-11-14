@@ -3,8 +3,8 @@ terraform {
     toluna = {
       #source = "toluna.com/tolunaprovider/toluna"
       #version = "1.0.0"
-      source = "toluna-terraform/toluna"
-      version = ">=0.0.9"
+      source = "toluna-terraform/toluna-v2"
+      version = ">=1.0.4"
     }
   }
 }

@@ -12,52 +12,40 @@ the arguments should include the -a|--action flag which calls the function (acti
 #The following example validates there are no duplicate environments under two different data layers:
   required_providers {
     toluna = {
-      source = "toluna-terraform/toluna"
+      source = "toluna-terraform/toluna-v2"
     } 
   }
 }
 
-data "toluna_validate_configuration" "app_json" {
-  dynamic "rule_set" {
-    for_each = local.app_config
-    content {
-      key_name = rule_set.value["key_name"]
-      rule     = rule_set.value["rule"]
-      value    = rule_set.value["value"]
-    }
-  }
-  json_config = data.consul_keys.appjson.var
-} 
+data "toluna_environment_config" "app_json" {
+    address = "consul-cluster-test.consul.1234546-abcd-efgh-ijkl-12345678.aws.hashicorp.cloud"
+    scheme  = "https"
+    path    = "terraform/app-name/app-env.json"
+    validation_rules = "terraform/validations/app-config.json"
+}
 
 ```
 
 ## Toggles
 #### Validate arguments:
-```yaml
-arguments   = command line arguments to pass to the validation script I.E. -a funcation name to run -f some file to validate
-```
 
 ## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="assert"></a> [assert](https://github.com/bwoznicki/terraform-provider-assert) | >= 0.0.1 |
+| <a name="toluna"></a> [assert](https://github.com/toluna-terraform/terraform-provider-toluna-v2) | >= 1.0.2 |
 
 
 ## Modules
 
+## Resources
+
+## DataSource
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="validate"></a> [validate](#module\validate) | ../../ |  |
-
-## Resources
+| <a name="toluna_environment_config"></a> [toluna_environment_config](#data\toluna_environment_config) | ../../ |  |
 
 No Resources.
 

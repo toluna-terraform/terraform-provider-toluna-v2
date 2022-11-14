@@ -46,31 +46,13 @@ resource "toluna_start_codebuild" "example" {
   }
 }
 
-data "toluna_validate_configuration" "example" {
-  rule_set {
-    key_name = "key"
-    rule ="unique"
-    value = "nil" 
-  }
-  rule_set {
-    key_name = "$..env_index"
-    rule ="odd"
-    value = "nil" 
-  }
-  rule_set {
-    key_name = "$..env_index"
-    rule =">"
-    value = "6" 
-  }
-  rule_set {
-    key_name = "$..env_index"
-    rule ="<"
-    value = "21" 
-  }
-  rule_set {
-    key_name = "key"
-    rule ="~="
-    value = "example" 
-  }
-  json_config = data.consul_keys.appjson.var
-} 
+data "toluna_environment_config" "app_json" {
+    address = "consul-cluster-test.consul.1234546-abcd-efgh-ijkl-12345678.aws.hashicorp.cloud"
+    scheme  = "https"
+    path    = "terraform/app-name/app-env.json"
+    validation_rules = "terraform/validations/app-config.json"
+}
+
+locals {
+  env_vars         = jsondecode("${data.toluna_environment_config.app_json.configuration}")[local.env_name]
+}

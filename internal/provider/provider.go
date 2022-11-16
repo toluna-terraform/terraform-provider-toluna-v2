@@ -105,7 +105,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		fmt.Println("failed to retrieve modules")
 	}
 	for _, r := range out {
-		if strings.HasPrefix(r.ModuleCall.Source, "toluna-terraform") {
+		if strings.HasPrefix(r.ModuleCall.Source, "toluna-terraform") && (r.ModuleCall.Version != "") {
 			remoteVersion := GetRemoteVersion(r.ModuleCall.Source)
 			localVersion := r.ModuleCall.Version
 			// Remove no-semver chars

@@ -53,7 +53,6 @@ var (
 
 func init() {
 	schema.DescriptionKind = schema.StringMarkdown
-
 	schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
 		descriptionWithDefault := s.Description
 		if s.Default != nil {
@@ -72,6 +71,16 @@ func New() *schema.Provider {
 				Optional: true,
 				Default:  false,
 			},
+			"terrafile_path": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "../../terraform/Terrafile",
+			},
+			"module_path": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "../../terraform/modules",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"toluna_invoke_lambda":   resourceInvokeLambda(),
@@ -88,6 +97,9 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	var severity diag.Severity
 	var message string
 	strict_module_validation := d.Get("strict_module_validation").(bool)
+	terrafile_path := d.Get("terrafile_path").(string)
+	module_path := d.Get("module_path").(string)
+	fmt.Println(terrafile_path, module_path)
 	if strict_module_validation {
 		severity = 0
 		message = "You must updated to latest version to continue working."
@@ -95,6 +107,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		severity = 1
 		message = "It is advised to update to latest version."
 	}
+	toluna.FetchModules(ctx, terrafile_path, module_path)
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
